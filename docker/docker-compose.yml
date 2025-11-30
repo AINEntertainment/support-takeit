@@ -26,11 +26,16 @@ services:
     volumes:
       - .:/workspace
   # EXPOSE port 80. Coolify's reverse proxy will connect to this port.
+    depends_on:
+      - mariadb
+      - redis
+    # EXPOSE port 80. Coolify's reverse proxy will connect to this port.
     expose:
       - "80"
+    # Keep 8000/9000 for internal network visibility if needed, but 80 is primary.
     ports:
       - "8000"
       - "9000"
-      
+
 volumes:
   mariadb-data:

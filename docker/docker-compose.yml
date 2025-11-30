@@ -28,6 +28,7 @@ services:
     ports:
       - "8000"
       - "9000"
+      #comment
 
 volumes:
   mariadb-data:

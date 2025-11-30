@@ -21,15 +21,16 @@ services:
     command: bash /workspace/init.sh
     environment:
       - SHELL=/bin/bash
+      - PORT=80 # Set environment variable for Gunicorn/Bench
     working_dir: /home/frappe
     volumes:
       - .:/workspace
+  # EXPOSE port 80. Coolify's reverse proxy will connect to this port.
     expose:
       - "80"
     ports:
       - "8000"
       - "9000"
-      #commen
-
+      
 volumes:
   mariadb-data:

@@ -1,5 +1,15 @@
 #!bin/bash
 
+FROM frappe/bench:latest
+
+USER root
+
+RUN mkdir -p /workspace
+COPY init.sh /workspace/init.sh
+RUN chmod +x /workspace/init.sh
+
+USER frappe
+
 if [ -d "/home/frappe/frappe-bench/apps/frappe" ]; then
     echo "Bench already exists, skipping init"
     cd frappe-bench

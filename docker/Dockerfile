@@ -5,7 +5,8 @@ USER root
 RUN mkdir -p /workspace
 COPY init.sh /workspace/init.sh
 RUN chmod +x /workspace/init.sh
-RUN chmod -R /home/frappe/frappe-bench/patches.txt
-RUN chown -R /home/frappe/apps
+RUN chown -R frappe:frappe /home/frappe
+RUN chmod +x frappe:frappe /home/frappe/frappe-bench/patches.txt
+
 
 USER frappe

@@ -27,7 +27,7 @@ services:
       # Map the local code to /workspace (where init.sh is)
       - .:/workspace
       # Map the ENTIRE bench directory to a NAMED VOLUME
-      - frappe-bench-data:/home/frappe/frappe-bench 
+      #  - frappe-bench-data:/home/frappe/frappe-bench 
 
     depends_on:
       - mariadb

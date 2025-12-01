@@ -6,36 +6,26 @@ SITE_NAME="helpdesk.localhost"
 BENCH_PATH="/home/frappe/frappe-bench"
 
 # --- LOGIC: Check if the bench already exists ---
+# --- LOGIC: Check if the bench already exists ---
 if [ -d "${BENCH_PATH}/apps/frappe" ]; then
     echo "Bench already exists, skipping initialization."
     
     # --- UPDATE BLOCK: Runs on subsequent restarts to pull latest code ---
     echo "Running bench update to fetch latest changes and apply patches..."
-    
-    # Must navigate inside the bench folder before running update
     cd frappe-bench
     
     # The 'bench update --patch' command handles git pull, database migrations, 
     # and asset building for all installed apps.
     bench update --patch
     
+    # The 'bench serve' command keeps the container alive and runs the application.
 else
     # --- INITIAL SETUP BLOCK: Only runs on first boot ---
     echo "Creating new bench..."
 
-    # CRITICAL FIX: If the persistent volume exists but is incomplete, we remove the 
-    # directory contents instead of the directory itself to avoid the "Device or resource busy" error.
-    if [ -d "${BENCH_PATH}" ]; then
-        echo "WARN: Incomplete bench path detected in persistent volume. Deleting contents to ensure a clean initialization."
-        # Use rm -rf on the CONTENTS of the directory only
-        rm -rf "${BENCH_PATH}"/*
-    fi
-    
-    # 1. Must navigate into the bench folder (which is now either new or empty/clean)
-    cd "${BENCH_PATH}"
+    bench init --skip-redis-config-generation frappe-bench --version version-15
 
-    # 2. Run bench init, initializing the current directory ('.')
-    bench init --skip-redis-config-generation . --version version-15
+    cd frappe-bench
 
     # Configure hosts for container services
     bench set-mariadb-host mariadb
@@ -75,8 +65,11 @@ fi
 
 # --- APPLICATION START: Runs every time, regardless of whether init was run ---
 
-# 1. Start the Socket.IO server in the background (required for real-time updates)
+# 1. Navigate to the bench directory to ensure subsequent commands work
+cd frappe-bench
+
+# 2. Start the Socket.IO server in the background (required for real-time updates)
 bench start --only socketio & 
 
-# 2. Run Gunicorn (bench serve) in the foreground, keeping the container alive.
+# 3. Run Gunicorn (bench serve) in the foreground, keeping the container alive.
 bench serve --port 80

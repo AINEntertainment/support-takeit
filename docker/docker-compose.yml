@@ -6,7 +6,7 @@ services:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
       - --skip-character-set-client-handshake
-      - --skip-innodb-read-only-compressed
+      - --skip-innodb-read-only-compressed # Temporary fix for MariaDB 10.6
     environment:
       MYSQL_ROOT_PASSWORD: 123
     volumes:
@@ -18,21 +18,18 @@ services:
   frappe:
     build: ./
     image: frappe/bench:latest
-    # --- START FIX: Use entrypoint for setup and command for bench start ---
-    entrypoint: ["/workspace/init.sh"] 
-    command: ["/bin/bash", "-c", "cd /home/frappe/frappe-bench && bench start"]
-    # --- END FIX ---
+    command: bash /workspace/init.sh
     environment:
       - SHELL=/bin/bash
-      # PORT=80 is no longer needed here as bench start handles routing/ports
-    working_dir: /home/frappe/frappe-bench # FIX: Set to the actual bench root
+      - PORT=80 # Set environment variable for Gunicorn/Bench
+    working_dir: /home/frappe
     volumes:
-      # FIX: Mount the current directory into the new working_dir location
-      - .:/home/frappe/frappe-bench 
+      - .:/workspace
+  # EXPOSE port 80. Coolify's reverse proxy will connect to this port.
     depends_on:
       - mariadb
       - redis
-    # The default bench setup uses port 8000 for its internal Nginx proxy
+    # EXPOSE port 80. Coolify's reverse proxy will connect to this port.
     expose:
       - "8000" 
     ports:
@@ -40,6 +37,7 @@ services:
       - "8088:8000"
       - "9000" # Keeping 9000 exposed for Socket.IO internal visibility
       - "8000" # Keeping 8000 exposed internally for direct access if needed
+
 
 volumes:
   mariadb-data:

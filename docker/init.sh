@@ -1,22 +1,9 @@
 #!bin/bash
 
-# Define paths for clarity
-BENCH_DIR="/home/frappe/frappe-bench"
-SITES_DIR="$BENCH_DIR/sites"
-
-# --- VOLUME CHECK & INITIALIZATION LOGIC ---
-# This checks if the persistent volume (mapped to $SITES_DIR) is mounted AND contains site data.
-if [ -d "$SITES_DIR" ] && [ "$(ls -A $SITES_DIR)" ]; then
-    echo "=================================================="
-    echo "Existing Frappe Bench volume detected. Skipping full init."
-    echo "=================================================="
-    
-    # Switch to the bench directory to prepare for serving
-    cd $BENCH_DIR
-    
-    # Run any necessary updates/patches on existing data
-    echo "Running bench update --patch..."
-    bench update --patch
+if [ -d "/home/frappe/frappe-bench/apps/frappe" ]; then
+    echo "Bench already exists, skipping init"
+    cd frappe-bench
+    bench start
 else
     echo "Creating new bench..."
 fi

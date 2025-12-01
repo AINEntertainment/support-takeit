@@ -16,7 +16,7 @@ services:
     image: redis:alpine
 
   frappe:
-    build: ./Docker
+    build: ./docker/
     image: frappe/bench:latest
     command: bash /workspace/init.sh
     environment:

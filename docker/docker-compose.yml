@@ -31,7 +31,7 @@ services:
       - redis
     # EXPOSE port 80. Coolify's reverse proxy will connect to this port.
     expose:
-      - "8000" 
+      - "80" 
     ports:
       # Map host port 80 to container's Nginx port 8000
       - "8088:8000"

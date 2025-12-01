@@ -21,39 +21,24 @@ else
     echo "$(date) | Creating new bench..."
 
     # --- FIX FAILED INIT RE-RUN & DEVICE BUSY ERRORS ---
-    # Targeted cleanup strategy for persistent volume lock on 'sites' directory.
+    # NEW STRATEGY: Use mv (rename) to bypass the 'Device or resource busy' lock.
     if [ -d "frappe-bench" ]; then
-        echo "$(date) | Detected existing frappe-bench directory. Attempting robust cleanup..."
+        echo "$(date) | Detected existing frappe-bench directory. Attempting to rename locked directory..."
         
-        # 1. Attempt to remove the known problematic 'sites' directory first.
-        if [ -d "frappe-bench/sites" ]; then
-            echo "$(date) | Targeting 'frappe-bench/sites' directory for cleanup..."
-            for j in {1..3}; do
-                if sudo rm -rf frappe-bench/sites; then
-                    echo "$(date) | 'sites' directory cleanup successful."
-                    break
-                else
-                    echo "$(date) | 'sites' cleanup failed. Retrying in 10 seconds (Attempt $j/3)..." >&2
-                    sleep 10
-                fi
-            done
+        TEMP_DIR="frappe-bench-old-$(date +%s)"
+        if sudo mv frappe-bench "$TEMP_DIR"; then
+            echo "$(date) | Successfully renamed frappe-bench to $TEMP_DIR."
+            
+            # Now, attempt to remove the old directory in the background (non-blocking).
+            # This doesn't guarantee success but prevents the script from being blocked.
+            # Use 'rm -rf' for clean up. Use `nohup` to prevent the process from being killed
+            # when the shell session ends, and redirect output to /dev/null.
+            echo "$(date) | Attempting to remove old directory ($TEMP_DIR) in background."
+            ( sudo rm -rf "$TEMP_DIR" & )
+        else
+            echo "$(date) | Fatal: Failed to rename frappe-bench. The lock is too persistent. Exiting." >&2
+            exit 1
         fi
-
-        # 2. Attempt to remove the main frappe-bench directory.
-        for i in {1..5}; do
-            if sudo rm -rf frappe-bench; then
-                echo "$(date) | Cleanup of frappe-bench successful."
-                break
-            else
-                # Increased sleep time to give the host OS more time to release the volume mount
-                echo "$(date) | Cleanup of frappe-bench failed. Retrying in 10 seconds (Attempt $i/5)..." >&2
-                sleep 10
-            fi
-            if [ $i -eq 5 ]; then
-                echo "$(date) | Fatal: Failed to clean up frappe-bench after 5 attempts. Exiting." >&2
-                exit 1
-            fi
-        done
     fi
     # --------------------------------------------------
 

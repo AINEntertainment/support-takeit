@@ -1,7 +1,7 @@
 #!bin/bash
 chown -R frappe:frappe /home/frappe/frappe-bench/
 
-if [ -d "/home/frappe/frappe-bench/apps/frappe" ]; then
+if [ -d "/home/frappe/frappe-bench/" ]; then
     echo "Bench already exists, skipping init"
     cd frappe-bench
     bench start

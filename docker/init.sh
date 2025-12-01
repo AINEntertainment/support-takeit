@@ -21,17 +21,32 @@ else
     echo "$(date) | Creating new bench..."
 
     # --- FIX FAILED INIT RE-RUN & DEVICE BUSY ERRORS ---
-    # If the directory exists but is incomplete, try to remove it.
-    # Use a retry loop to handle "Device or resource busy" errors from volume mounts.
+    # Targeted cleanup strategy for persistent volume lock on 'sites' directory.
     if [ -d "frappe-bench" ]; then
-        echo "$(date) | Detected existing frappe-bench directory. Attempting cleanup..."
+        echo "$(date) | Detected existing frappe-bench directory. Attempting robust cleanup..."
+        
+        # 1. Attempt to remove the known problematic 'sites' directory first.
+        if [ -d "frappe-bench/sites" ]; then
+            echo "$(date) | Targeting 'frappe-bench/sites' directory for cleanup..."
+            for j in {1..3}; do
+                if sudo rm -rf frappe-bench/sites; then
+                    echo "$(date) | 'sites' directory cleanup successful."
+                    break
+                else
+                    echo "$(date) | 'sites' cleanup failed. Retrying in 10 seconds (Attempt $j/3)..." >&2
+                    sleep 10
+                fi
+            done
+        fi
+
+        # 2. Attempt to remove the main frappe-bench directory.
         for i in {1..5}; do
             if sudo rm -rf frappe-bench; then
-                echo "$(date) | Cleanup successful."
+                echo "$(date) | Cleanup of frappe-bench successful."
                 break
             else
                 # Increased sleep time to give the host OS more time to release the volume mount
-                echo "$(date) | Cleanup failed (Device busy?). Retrying in 10 seconds (Attempt $i/5)..." >&2
+                echo "$(date) | Cleanup of frappe-bench failed. Retrying in 10 seconds (Attempt $i/5)..." >&2
                 sleep 10
             fi
             if [ $i -eq 5 ]; then

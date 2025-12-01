@@ -18,7 +18,7 @@ else
     echo "Creating new bench and installing initial apps..."
     
     # 1. Initialize the new bench
-    bench init --skip-redis-config-generation frappe-bench --version version-16
+    bench init --skip-redis-config-generation frappe-bench --version version-15
     cd "${BENCH_PATH}"
     
     # 2. Configure container services for Frappe/ERPNext

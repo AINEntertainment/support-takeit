@@ -40,4 +40,4 @@ bench --site helpdesk.localhost set-config server_script_enabled 1
 bench --site helpdesk.localhost clear-cache
 bench use helpdesk.localhost
 
-bench start
+bench serve --port 80

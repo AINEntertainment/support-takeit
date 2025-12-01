@@ -25,19 +25,18 @@ services:
     working_dir: /home/frappe
     volumes:
       - .:/workspace
-  # EXPOSE port 80. Coolify's reverse proxy will connect to this port.
+#    - frappe-sites-data:/home/frappe/frappe-bench/sites
+
     depends_on:
       - mariadb
       - redis
     # EXPOSE port 80. Coolify's reverse proxy will connect to this port.
     expose:
-      - "80" 
+      - "80"
+    # Keep 8000/9000 for internal network visibility if needed, but 80 is primary.
     ports:
-      # Map host port 80 to container's Nginx port 8000
-      - "8088:8000"
-      - "9000" # Keeping 9000 exposed for Socket.IO internal visibility
-      - "8000" # Keeping 8000 exposed internally for direct access if needed
-
+      - "8000"
+      - "9000"
 
 volumes:
   mariadb-data:

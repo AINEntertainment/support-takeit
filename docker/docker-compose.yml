@@ -24,10 +24,8 @@ services:
       - PORT=80 # Set environment variable for Gunicorn/Bench
     working_dir: /home/frappe
     volumes:
-      # Map the local code to /workspace (where init.sh is)
       - .:/workspace
-      # Map the ENTIRE bench directory to a NAMED VOLUME
-      #  - frappe-bench-data:/home/frappe/frappe-bench 
+#    - frappe-sites-data:/home/frappe/frappe-bench/sites
 
     depends_on:
       - mariadb

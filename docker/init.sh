@@ -26,7 +26,7 @@ else
     bench init --skip-redis-config-generation frappe-bench --version version-15
 
     cd frappe-bench
-    bench update --patch
+  #  bench update --patch
 
     # Configure hosts for container services
     bench set-mariadb-host mariadb
@@ -64,6 +64,4 @@ else
     bench --site ${SITE_NAME} clear-cache # Clear cache after build is critical
 fi
 
-# --- APPLICATION START: Runs every time, regardless of whether init was run ---
-# The final command to keep the container alive and serving requests (Gunicorn)
-bench serve --port 80
+    bench serve --port 80

@@ -1,9 +1,18 @@
 #!bin/bash
 
-if [ -d "/home/frappe/frappe-bench/sites" ]; then
-    echo "Bench already exists, skipping init"
-    cd frappe-bench
-    bench start
+# --- VOLUME CHECK & INITIALIZATION LOGIC ---
+# This checks if the persistent volume (mapped to $SITES_DIR) is mounted AND contains site data.
+if [ -d "$SITES_DIR" ] && [ "$(ls -A $SITES_DIR)" ]; then
+    echo "=================================================="
+    echo "Existing Frappe Bench volume detected. Skipping full init."
+    echo "=================================================="
+    
+    # Switch to the bench directory to prepare for serving
+    cd $BENCH_DIR
+    
+    # Run any necessary updates/patches on existing data
+    echo "Running bench update --patch..."
+    bench update --patch
 else
     echo "Creating new bench..."
 fi

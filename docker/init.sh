@@ -32,14 +32,12 @@ bench new-site helpdesk.localhost \
 --admin-password admin \
 --no-mariadb-socket
 
-    bench --site helpdesk.localhost install-app telephony
-    bench --site helpdesk.localhost install-app helpdesk
-    bench --site helpdesk.localhost set-config developer_mode 1
-    bench --site helpdesk.localhost set-config mute_emails 1
-    bench --site helpdesk.localhost set-config server_script_enabled 1
-    bench --site helpdesk.localhost clear-cache
-    bench use helpdesk.localhost
-    bench build # build asset 
-    bench --site helpdesk.localhost clear-cache #remove cache after build
+bench --site helpdesk.localhost install-app telephony
+bench --site helpdesk.localhost install-app helpdesk
+bench --site helpdesk.localhost set-config developer_mode 1
+bench --site helpdesk.localhost set-config mute_emails 1
+bench --site helpdesk.localhost set-config server_script_enabled 1
+bench --site helpdesk.localhost clear-cache
+bench use helpdesk.localhost
 
 bench serve --port 80

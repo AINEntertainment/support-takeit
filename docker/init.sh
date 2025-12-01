@@ -20,6 +20,15 @@ if [ -d "/home/frappe/frappe-bench/apps/frappe" ]; then
 else
     echo "$(date) | Creating new bench..."
 
+    # --- FIX FAILED INIT RE-RUN ---
+    # Check if the frappe-bench directory exists but is incomplete.
+    # If it exists (and the IF condition failed), remove it to allow bench init to run.
+    if [ -d "frappe-bench" ]; then
+        echo "$(date) | Detected incomplete bench installation. Removing existing frappe-bench directory."
+        sudo rm -rf frappe-bench
+    fi
+    # ------------------------------
+
     bench init --skip-redis-config-generation frappe-bench --version version-15
 
     # --- FIX PERMISSION ERROR (Errno 13) ---

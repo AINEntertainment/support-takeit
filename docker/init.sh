@@ -30,8 +30,9 @@ else
                 echo "$(date) | Cleanup successful."
                 break
             else
-                echo "$(date) | Cleanup failed (Device busy?). Retrying in 3 seconds (Attempt $i/5)..." >&2
-                sleep 3
+                # Increased sleep time to give the host OS more time to release the volume mount
+                echo "$(date) | Cleanup failed (Device busy?). Retrying in 10 seconds (Attempt $i/5)..." >&2
+                sleep 10
             fi
             if [ $i -eq 5 ]; then
                 echo "$(date) | Fatal: Failed to clean up frappe-bench after 5 attempts. Exiting." >&2

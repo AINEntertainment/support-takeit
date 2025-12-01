@@ -1,6 +1,5 @@
 #!bin/bash
 
-
 if [ -d "/home/frappe/frappe-bench/" ]; then
     echo "Bench already exists, skipping init"
     cd frappe-bench

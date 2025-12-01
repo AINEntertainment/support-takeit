@@ -24,7 +24,7 @@ sed -i '/redis/d' ./Procfile
 sed -i '/watch/d' ./Procfile
 
 bench get-app telephony
-bench get-app helpdesk https://github.com/AINEntertainment/helpdesk-takeit.git --branch develop
+bench get-app helpdesk https://github.com/AINEntertainment/support-takeit.git --branch develop
 
 
 bench new-site helpdesk.localhost \

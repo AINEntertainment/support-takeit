@@ -37,7 +37,7 @@ services:
       - "8000" 
     ports:
       # Map host port 80 to container's Nginx port 8000
-      - "80:8000" 
+      - "8080:8000"
       - "9000" # Keeping 9000 exposed for Socket.IO internal visibility
       - "8000" # Keeping 8000 exposed internally for direct access if needed
 

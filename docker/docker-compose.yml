@@ -16,26 +16,22 @@ services:
     image: redis:alpine
 
   frappe:
-    build: ./docker
+    build: ./
     image: frappe/bench:latest
     command: bash /workspace/init.sh
     environment:
       - SHELL=/bin/bash
-      - PORT=80 # Set environment variable for Gunicorn/Bench
     working_dir: /home/frappe
     volumes:
-     - .:/workspace
-  # EXPOSE port 80. Coolify's reverse proxy will connect to this port.
+      - .:/workspace
     depends_on:
       - mariadb
       - redis
-    # EXPOSE port 80. Coolify's reverse proxy will connect to this port.
     expose:
       - "80"
-    # Keep 8000/9000 for internal network visibility if needed, but 80 is primary.
     ports:
       - "8000"
       - "9000"
 
-  volumes:
+volumes:
   mariadb-data:

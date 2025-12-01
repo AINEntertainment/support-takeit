@@ -23,23 +23,19 @@ else
     # --- INITIAL SETUP BLOCK: Only runs on first boot ---
     echo "Creating new bench..."
 
-    # 1. Create the directory (Docker volume mount handles persistence here) and enter it
-    mkdir -p frappe-bench
-    cd frappe-bench
-
-    # CRITICAL FIX: If the persistent volume exists but is only partially initialized, 
-    # the subsequent 'bench init .' fails. We check for a common missing file 
-    # (sites/common_site_config.json) and wipe the directory if it's missing, forcing a clean init.
-    if [ ! -f "./sites/common_site_config.json" ] && [ "$(ls -A .)" ]; then
-        echo "WARN: Persistent bench directory is incomplete or corrupt. Cleaning contents..."
-        # Note: 'rm -rf .' is generally dangerous but safe here because we are in a 
-        # containerized path mapped to a named volume.
-        rm -rf ./* ./.git* ./.bench*
-        rm -rf ./.* 2>/dev/null || true # Clean up dot files/folders, ignoring errors
+    # CRITICAL FIX: If the persistent volume exists but is incomplete (which causes the
+    # "Bench instance already exists" error), we remove the directory contents to force a clean init.
+    if [ -d "${BENCH_PATH}" ]; then
+        echo "WARN: Incomplete bench path detected in persistent volume. Deleting contents to ensure a clean initialization."
+        # Use simple rm -rf on the directory
+        rm -rf "${BENCH_PATH}"
     fi
+    
+    # 1. Run bench init, letting it create the directory (frappe-bench)
+    bench init --skip-redis-config-generation frappe-bench --version version-15
 
-    # 2. Run bench init WITHOUT the directory name to initialize the current directory ('.')
-    bench init --skip-redis-config-generation . --version version-15
+    # 2. Must navigate inside the bench folder after init
+    cd "${BENCH_PATH}"
 
     # Configure hosts for container services
     bench set-mariadb-host mariadb

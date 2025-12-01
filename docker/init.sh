@@ -14,7 +14,7 @@ if [ -d "$SITES_DIR" ] && [ "$(ls -A $SITES_DIR)" ]; then
     echo "Running bench update --patch..."
     bench update --patch
 else
-    echo "Creating new bench..."
+    echo "Creating new bench...test"
 fi
 
 bench init --skip-redis-config-generation frappe-bench --version version-15

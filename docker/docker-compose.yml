@@ -25,7 +25,7 @@ services:
     volumes:
       - .:/workspace
     ports:
-      - 8080:80
+      - 8002:80
       - 34567:9000
 
 volumes:

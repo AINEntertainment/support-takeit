@@ -23,19 +23,19 @@ else
     # --- INITIAL SETUP BLOCK: Only runs on first boot ---
     echo "Creating new bench..."
 
-    # CRITICAL FIX: If the persistent volume exists but is incomplete (which causes the
-    # "Bench instance already exists" error), we remove the directory contents to force a clean init.
+    # CRITICAL FIX: If the persistent volume exists but is incomplete, we remove the 
+    # directory contents instead of the directory itself to avoid the "Device or resource busy" error.
     if [ -d "${BENCH_PATH}" ]; then
         echo "WARN: Incomplete bench path detected in persistent volume. Deleting contents to ensure a clean initialization."
-        # Use simple rm -rf on the directory
-        rm -rf "${BENCH_PATH}"
+        # Use rm -rf on the CONTENTS of the directory only
+        rm -rf "${BENCH_PATH}"/*
     fi
     
-    # 1. Run bench init, letting it create the directory (frappe-bench)
-    bench init --skip-redis-config-generation frappe-bench --version version-15
-
-    # 2. Must navigate inside the bench folder after init
+    # 1. Must navigate into the bench folder (which is now either new or empty/clean)
     cd "${BENCH_PATH}"
+
+    # 2. Run bench init, initializing the current directory ('.')
+    bench init --skip-redis-config-generation . --version version-15
 
     # Configure hosts for container services
     bench set-mariadb-host mariadb

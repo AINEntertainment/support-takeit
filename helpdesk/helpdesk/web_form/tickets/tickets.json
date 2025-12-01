@@ -19,7 +19,7 @@
  "introduction_text": "",
  "is_standard": 1,
  "list_columns": [],
- "login_required": 1,
+ "login_required": 0,
  "max_attachment_size": 0,
  "modified": "2025-07-03 17:49:59.739936",
  "modified_by": "Administrator",

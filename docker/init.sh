@@ -1,9 +1,19 @@
-#!bin/bash
+#!/bin/bash
+BENCH_DIR="/home/frappe/frappe-bench"
+FRAPPE_USER_UID=1000
 
-if [ -d "/home/frappe/frappe-bench/apps/frappe" ]; then
-    echo "Bench already exists, skipping init"
-    cd frappe-bench
-    bench start
+# Fix 1: Ensure the frappe user owns the mounted volume directories
+# This resolves the PermissionError on logs and sites files.
+echo "Setting ownership of $BENCH_DIR to user $FRAPPE_USER_UID..."
+sudo chown -R $FRAPPE_USER_UID:$FRAPPE_USER_UID $BENCH_DIR
+echo "Ownership set."
+
+# Use the 'sites' directory as the existence check, as it's created during a successful bench init.
+if [ -d "$BENCH_DIR/sites" ]; then
+    echo "Bench already exists, skipping initialization."
+    cd $BENCH_DIR
+    # Use 'exec' to replace the shell process with bench start
+    exec bench start
 else
     echo "Creating new bench..."
 fi

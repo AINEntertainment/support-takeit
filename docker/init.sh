@@ -27,6 +27,17 @@ else
     mkdir -p frappe-bench
     cd frappe-bench
 
+    # CRITICAL FIX: If the persistent volume exists but is only partially initialized, 
+    # the subsequent 'bench init .' fails. We check for a common missing file 
+    # (sites/common_site_config.json) and wipe the directory if it's missing, forcing a clean init.
+    if [ ! -f "./sites/common_site_config.json" ] && [ "$(ls -A .)" ]; then
+        echo "WARN: Persistent bench directory is incomplete or corrupt. Cleaning contents..."
+        # Note: 'rm -rf .' is generally dangerous but safe here because we are in a 
+        # containerized path mapped to a named volume.
+        rm -rf ./* ./.git* ./.bench*
+        rm -rf ./.* 2>/dev/null || true # Clean up dot files/folders, ignoring errors
+    fi
+
     # 2. Run bench init WITHOUT the directory name to initialize the current directory ('.')
     bench init --skip-redis-config-generation . --version version-15
 
@@ -67,9 +78,6 @@ else
 fi
 
 # --- APPLICATION START: Runs every time, regardless of whether init was run ---
-
-# The script is already inside the frappe-bench directory from either the if or else block.
-# We do not need the 'cd frappe-bench' command here anymore.
 
 # 1. Start the Socket.IO server in the background (required for real-time updates)
 bench start --only socketio & 

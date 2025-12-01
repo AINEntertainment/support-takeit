@@ -20,7 +20,7 @@ def get_first_ticket():
     ticket = frappe.get_all(
         "HD Ticket",
         filters={
-            "subject": ["!=", "Welcome to Helpdesk"],
+            "subject": ["!=", "Welcome to Take IT Helpdesk"],
             "owner": ["=", frappe.session.user],
         },
         fields=["name"],

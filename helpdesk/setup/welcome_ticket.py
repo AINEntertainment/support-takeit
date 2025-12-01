@@ -32,7 +32,7 @@ def create_ticket():
         return
 
     d = frappe.new_doc("HD Ticket")
-    d.subject = "Welcome to Helpdesk"
+    d.subject = "Welcome to Take IT Helpdesk"
     d.description = CONTENT
     d.raised_by = AUTHOR_EMAIl
     d.contact = AUTHOR_NAME

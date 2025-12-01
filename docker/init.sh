@@ -1,12 +1,13 @@
 #!bin/bash
 
-if [ -d "/home/frappe/frappe-bench/apps/frappe" ]; then
-    echo "Bench already exists, skipping init"
-    cd frappe-bench
-    bench start
-else
-    echo "Creating new bench..."
-fi
+
+#if [ -d "/home/frappe/frappe-bench/apps/frappe" ]; then
+#    echo "Bench already exists, skipping init"
+#    cd frappe-bench
+#    bench start
+#else
+#    echo "Creating new bench..."
+#fi
 
 bench init --skip-redis-config-generation frappe-bench --version version-15
 
@@ -23,7 +24,8 @@ sed -i '/redis/d' ./Procfile
 sed -i '/watch/d' ./Procfile
 
 bench get-app telephony
-bench get-app helpdesk --branch main
+bench get-app helpdesk https://github.com/AINEntertainment/helpdesk-takeit.git --branch develop
+
 
 bench new-site helpdesk.localhost \
 --force \

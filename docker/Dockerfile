@@ -7,6 +7,6 @@ COPY init.sh /workspace/init.sh
 RUN chmod +x /workspace/init.sh
 
 RUN chown -R frappe:frappe /home/frappe/apps/frappe
-RUN chown -R frappe:frappe /home/frappe/frappe-bench
+RUN chown -R /home/frappe/frappe-bench
 
 USER frappe

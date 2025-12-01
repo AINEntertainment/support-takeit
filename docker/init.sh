@@ -8,6 +8,7 @@ set -euo pipefail
 
 # Define the path to the bench directory
 BENCH_PATH="/home/frappe/frappe-bench"
+SITE_NAME="helpdesk.localhost"
 
 # --- Conditional Bench Initialization (Runs only once) ---
 # Check if the bench already exists by looking for the frappe app directory.

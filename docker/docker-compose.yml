@@ -24,6 +24,7 @@ services:
     working_dir: /home/frappe
     volumes:
       - .:/workspace
+      - .:/home/frappe/frappe-bench/apps/frappe
     depends_on:
       - mariadb
       - redis

@@ -25,8 +25,7 @@ services:
     working_dir: /home/frappe
     volumes:
       - .:/workspace
-#    - frappe-sites-data:/home/frappe/frappe-bench/sites
-
+  # EXPOSE port 80. Coolify's reverse proxy will connect to this port.
     depends_on:
       - mariadb
       - redis

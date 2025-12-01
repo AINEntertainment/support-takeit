@@ -39,5 +39,3 @@ services:
 
 volumes:
   mariadb-data:
-  frappe_sites:
-  frappe_logs:

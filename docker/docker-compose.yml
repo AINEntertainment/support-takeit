@@ -23,7 +23,7 @@ services:
       - SHELL=/bin/bash
       - PORT=80 # Set environment variable for Gunicorn/Bench
     working_dir: /home/frappe
-    volumes:
+#    volumes:
   #   - .:/workspace
   # EXPOSE port 80. Coolify's reverse proxy will connect to this port.
     depends_on:

@@ -31,3 +31,4 @@ services:
 
 volumes:
   mariadb-data:
+  frappe-sites-data:

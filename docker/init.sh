@@ -1,6 +1,5 @@
 #!bin/bash
-chown -R frappe:frappe /home/frappe/
-chown -R frappe:frappe /workspace/
+
 
 if [ -d "/home/frappe/frappe-bench/" ]; then
     echo "Bench already exists, skipping init"

@@ -70,11 +70,11 @@ if [ ! -d "${BENCH_PATH}" ]; then
 fi
 cd "${BENCH_PATH}"
 
-# 1. Pull latest code for all apps, forcefully reset any local changes, 
-#    and ensure the changes are picked up.
-#    We only target 'helpdesk' app specifically if needed, but a general 'bench update --pull' 
-#    for all installed apps is often sufficient and safer.
-bench update --pull
+# 1. PULL LATEST CODE AND FORCE RESET: 
+# This command pulls the latest changes for all apps and uses --reset to discard any 
+# uncommitted local changes, forcing the Git update to succeed. This ensures you 
+# get the latest code from your 'develop' branch.
+bench update --pull --reset
 
 # 2. Apply any database migrations after code pull
 bench migrate

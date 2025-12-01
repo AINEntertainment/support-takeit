@@ -77,7 +77,7 @@ cd "${BENCH_PATH}"
 bench update --pull --reset
 
 # 2. Apply any database migrations after code pull
-bench migrate
+bench migrate --site ${SITE_NAME}
 
 # 3. Rebuild frontend assets (JS/CSS) to reflect code changes
 bench build

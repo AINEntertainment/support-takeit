@@ -1,9 +1,20 @@
 #!bin/bash
 
-if [ -d "/home/frappe/frappe-bench/apps/frappe" ]; then
-    echo "Bench already exists, skipping init"
-    cd frappe-bench
-    bench start
+BENCH_DIR="/home/frappe/frappe-bench"
+
+# 1. THE FIX: Set correct ownership for the mounted volume at runtime.
+# This runs AFTER the volume is mounted, fixing the Errno 13 Permission denied error.
+echo "Setting correct ownership for mounted volumes to frappe:frappe..."
+# The Frappe user has UID 1000 (standard for non-root users)
+sudo chown -R 1000:1000 $BENCH_DIR 
+echo "Ownership set. Starting checks."
+
+# Use the 'sites' directory as the existence check
+if [ -d "$BENCH_DIR/sites" ]; then
+    echo "Bench already exists, skipping initialization."
+    cd $BENCH_DIR
+    # Use 'exec' to replace the shell process with bench start
+    exec bench start
 else
     echo "Creating new bench..."
 fi

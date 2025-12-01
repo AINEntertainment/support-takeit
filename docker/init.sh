@@ -23,10 +23,12 @@ else
     # --- INITIAL SETUP BLOCK: Only runs on first boot ---
     echo "Creating new bench..."
 
-    bench init --skip-redis-config-generation frappe-bench --version version-15
-
-    # Must navigate inside the bench folder after init
+    # 1. Create the directory (Docker volume mount handles persistence here) and enter it
+    mkdir -p frappe-bench
     cd frappe-bench
+
+    # 2. Run bench init WITHOUT the directory name to initialize the current directory ('.')
+    bench init --skip-redis-config-generation . --version version-15
 
     # Configure hosts for container services
     bench set-mariadb-host mariadb

@@ -25,6 +25,7 @@ sed -i '/watch/d' ./Procfile
 bench get-app telephony
 bench get-app helpdesk https://github.com/AINEntertainment/support-takeit.git --branch develop
 
+bench update --patch
 
 bench new-site helpdesk.localhost \
 --force \

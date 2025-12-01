@@ -24,6 +24,7 @@ services:
     working_dir: /home/frappe
     volumes:
       - .:/workspace
+      - frappe-sites-data:
     ports:
       - 8002:80
       - 34567:9000

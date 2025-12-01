@@ -20,14 +20,26 @@ if [ -d "/home/frappe/frappe-bench/apps/frappe" ]; then
 else
     echo "$(date) | Creating new bench..."
 
-    # --- FIX FAILED INIT RE-RUN ---
-    # Check if the frappe-bench directory exists but is incomplete.
-    # If it exists (and the IF condition failed), remove it to allow bench init to run.
+    # --- FIX FAILED INIT RE-RUN & DEVICE BUSY ERRORS ---
+    # If the directory exists but is incomplete, try to remove it.
+    # Use a retry loop to handle "Device or resource busy" errors from volume mounts.
     if [ -d "frappe-bench" ]; then
-        echo "$(date) | Detected incomplete bench installation. Removing existing frappe-bench directory."
-        sudo rm -rf frappe-bench
+        echo "$(date) | Detected existing frappe-bench directory. Attempting cleanup..."
+        for i in {1..5}; do
+            if sudo rm -rf frappe-bench; then
+                echo "$(date) | Cleanup successful."
+                break
+            else
+                echo "$(date) | Cleanup failed (Device busy?). Retrying in 3 seconds (Attempt $i/5)..." >&2
+                sleep 3
+            fi
+            if [ $i -eq 5 ]; then
+                echo "$(date) | Fatal: Failed to clean up frappe-bench after 5 attempts. Exiting." >&2
+                exit 1
+            fi
+        done
     fi
-    # ------------------------------
+    # --------------------------------------------------
 
     bench init --skip-redis-config-generation frappe-bench --version version-15
 
